@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>EVA Question Builder</title>
+    <%= csrf_meta_tags %>
+  </head>
+  <body>
+    <%= yield %>
+
+    <%= javascript_include_tag 'application' %>
+    <%= javascript_include_tag 'question_builder', :type => "text/jsx" %>
+  </body>
+</html>
