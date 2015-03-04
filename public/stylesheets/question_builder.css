@@ -24,6 +24,29 @@ input {
   padding: 3px;
 }
 
+.question_view {
+/* decorate wrapper from here */
+}
+
+.question_label {
+  float: left;
+  padding: 5px;
+  width: 150px;
+}
+
+.question_label h4, div small {
+  float: right;
+}
+
+.question_label div small {
+  color: green;
+}
+
+.question_fields {
+  float: left;
+  padding: 5px;
+}
+
 .btn-group {
   position: relative;
   display: inline-block;

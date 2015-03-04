@@ -1,6 +1,13 @@
 // Warning: Not in DOMContentLoaded
 
-var CheckboxChoice = React.createClass({
+var TextChoice = React.createClass({
+  render: function() {
+    console.log('Text choice ');
+    // Disable the choice count when Text choice selected
+  }
+});
+
+var MultipleChoice = React.createClass({
   propTypes: {
     count: React.PropTypes.number.isRequired,
     store: React.PropTypes.array.isRequired
@@ -24,7 +31,7 @@ var CheckboxChoice = React.createClass({
           { _(this.props.count).times(function(idx) {
             return (
               <li key={'cb-list' + idx}>
-                <span>{(idx + 1)}</span> <input type="text" onBlur={this.addQuestion} placeholder={'Checkbox option #' + (idx + 1)} />
+                <span>{(idx + 1) + '.)'}</span> <input type="text" onBlur={this.addQuestion} placeholder={'Choices option ' + (idx + 1)} />
               </li>
             );
           }.bind(this)) }
@@ -36,7 +43,7 @@ var CheckboxChoice = React.createClass({
           { _(this.props.store).map(function(model, idx) {
             return (
               <li key={'cb-list' + idx}>
-                <input type="checkbox" name={'cb' + idx} /> <input type="text" value={model.value} placeholder={'Checkbox option #' + (idx + 1)} />
+                <input type="checkbox" name={'cb' + idx} /> <input type="text" value={model.value} placeholder={'Choices option ' + (idx + 1)} />
               </li>
             );
           }) }
@@ -46,7 +53,7 @@ var CheckboxChoice = React.createClass({
   }
 });
 
-var RadioButtonChoice = React.createClass({
+var SingleChoice = React.createClass({
   propTypes: {
     count: React.PropTypes.number.isRequired
   },
@@ -63,7 +70,7 @@ var RadioButtonChoice = React.createClass({
         { _(this.props.count).times(function(idx) {
           return (
             <li key={'rb-list' + idx}>
-              <span>{(idx + 1)}</span> <input type="text" placeholder={'Radio option #' + (idx + 1)} />
+              <span>{(idx + 1) + '.)'}</span> <input type="text" placeholder={'Single choice ' + (idx + 1)} />
             </li>
           );
         }) }
@@ -72,7 +79,7 @@ var RadioButtonChoice = React.createClass({
   }
 });
 
-var OpenQuestionChoice = React.createClass({
+var OpenEnded = React.createClass({
   propTypes: {
     count: React.PropTypes.number.isRequired
   },
@@ -89,7 +96,7 @@ var OpenQuestionChoice = React.createClass({
         { _(this.props.count).times(function(idx) {
           return (
             <li key={'oq-list' + idx}>
-              <span>{(idx + 1)}</span> <input type="text" name={'oq' + idx} placeholder={'Open ended question #' + (idx + 1)} size="70" />
+              <span>{(idx + 1) + '.)'}</span> <input type="text" name={'oq' + idx} placeholder={'Open ended question ' + (idx + 1)} size="57" />
             </li>
           );
         }) }
@@ -101,10 +108,10 @@ var OpenQuestionChoice = React.createClass({
 var SegmentedControl = React.createClass({
   getInitialState: function() {
     return {
-      questionTypes: ['Free text', 'Checkbox', 'Radio button', 'Open ended'],
+      questionTypes: ['Text', 'Multiple Choice', 'Single Choice', 'Open Ended'],
       numOfChoices: 4,
-      currentSegment: 'Free text',
-      checkboxQuestions: [],
+      currentSegment: 'Text',
+      multipleChoiceQuestions: [],
       radioQuestions: [],
       openQuestions: []
     }
@@ -123,35 +130,50 @@ var SegmentedControl = React.createClass({
   },
 
   currentSegment: function() {
-    if (this.state.currentSegment == 'Free text') {
+    if (this.state.currentSegment == 'Text') {
       // alert('Put the Free text Component from here!!! Disable the select #.');
-    } else if (this.state.currentSegment == 'Checkbox') {
-      return <CheckboxChoice count={this.state.numOfChoices} store={this.state.checkboxQuestions} />;
-    } else if (this.state.currentSegment == 'Radio button') {
-      return <RadioButtonChoice count={this.state.numOfChoices} />;
-    } else if (this.state.currentSegment == 'Open ended') {
-      return <OpenQuestionChoice count={this.state.numOfChoices} />
+    } else if (this.state.currentSegment == 'Multiple Choice') {
+      return <MultipleChoice count={this.state.numOfChoices} store={this.state.multipleChoiceQuestions} />;
+    } else if (this.state.currentSegment == 'Single Choice') {
+      return <SingleChoice count={this.state.numOfChoices} />;
+    } else if (this.state.currentSegment == 'Open Ended') {
+      return <OpenEnded count={this.state.numOfChoices} />
     }
   },
 
   render: function() {
     return <div>
-      <div className="btn-group">
-        <input className="btn choice-count" type="number" min="1" name="numOfChoices" onChange={this.setNumOfChoices} value={this.state.numOfChoices} />
+      <div className="question_view">
 
-        { this.state.questionTypes.map(function(label, idx) {
-          return (
-            <button className={'btn' + (this.state.currentSegment == label ? ' current' : '')}
-              type="button" key={'btn' + idx}
-              onClick={this.segmentValueChanged.bind(this, label)}>{ label }
-            </button>
-          );
-        }.bind(this)) }
+        <div className="question_label">
+          <h4> Question 01: </h4>
+          <div><small> Andre Joseph </small></div>
+          <div><small> 2 months ago </small></div>
+        </div>
 
-      </div>
-      <div className="choices">
-        { /* The parent has to keep track of the Choice state */ }
-        { this.currentSegment() }
+        <div className="question_fields">
+          <div className="question_textarea">
+            <textarea rows="4" cols="60" placeholder="Ask Anything for candidates..."></textarea>
+          </div>
+          <div className="btn-group">
+            <input className="btn choice-count" type="number" min="1" name="numOfChoices" onChange={this.setNumOfChoices} value={this.state.numOfChoices} />
+
+            { this.state.questionTypes.map(function(label, idx) {
+              return (
+                <button className={'btn' + (this.state.currentSegment == label ? ' current' : '')}
+                  type="button" key={'btn' + idx}
+                  onClick={this.segmentValueChanged.bind(this, label)}>{ label }
+                </button>
+              );
+            }.bind(this)) }
+
+          </div>
+          <div className="choices">
+            { /* The parent has to keep track of the Choice state */ }
+            { this.currentSegment() }
+          </div>
+        </div>
+
       </div>
     </div>;
   }
